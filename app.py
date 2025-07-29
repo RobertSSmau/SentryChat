@@ -1,8 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import os
 import re
 from dotenv import load_dotenv
 from openai import OpenAI
+from flask_cors import CORS
+
+app = Flask(__name__, template_folder="templates")
+CORS(app)  # abilita CORS su tutte le rotte
 
 # Carica variabili d'ambiente da .env
 load_dotenv()
@@ -13,8 +17,6 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
-# Configurazione Flask
-app = Flask(__name__)
 
 # Preprompt per contestualizzare il chatbot
 SYSTEM_PROMPT = """Sei un analizzatore esperto di sicurezza informatica. 
@@ -170,6 +172,9 @@ Pericolosità: ...
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 # Avvio locale
 if __name__ == "__main__":

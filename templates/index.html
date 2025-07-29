@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cybersecurity Chatbot</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .card {
+      background-color: #1e1e1e;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #333;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #00b894;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #019875;
+    }
+    .response {
+      margin-top: 1rem;
+      background-color: #2d2d2d;
+      padding: 1rem;
+      border-radius: 6px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛡️ Cybersecurity Chatbot</h1>
+  <div class="container">
+
+    <div class="card">
+      <h2>🔍 Analisi Minaccia</h2>
+      <input id="threatInput" placeholder="Esempio: OSX.VSearch">
+      <button onclick="analyzeThreat()">Analizza</button>
+      <div id="threatResponse" class="response"></div>
+    </div>
+
+    <div class="card">
+      <h2>📧 Verifica Email (Phishing)</h2>
+      <textarea id="emailInput" rows="4" placeholder="Incolla qui il contenuto sospetto..."></textarea>
+      <button onclick="checkEmail()">Verifica</button>
+      <div id="emailResponse" class="response"></div>
+    </div>
+
+    <div class="card">
+      <h2>🔑 Analisi Password</h2>
+      <input type="text" id="passwordInput" placeholder="Scrivi la password da analizzare">
+      <button onclick="checkPassword()">Analizza</button>
+      <div id="passwordResponse" class="response"></div>
+    </div>
+
+    <div class="card">
+      <h2>💬 Chat Cybersecurity</h2>
+      <textarea id="chatInput" rows="3" placeholder="Fai una domanda sulla sicurezza informatica..."></textarea>
+      <button onclick="chatBot()">Invia</button>
+      <div id="chatResponse" class="response"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const BASE_URL = "http://localhost:5000";
+
+    async function analyzeThreat() {
+      const input = document.getElementById("threatInput").value;
+      const resBox = document.getElementById("threatResponse");
+      resBox.innerText = "⏳ Analisi in corso...";
+      try {
+        const res = await fetch(`${BASE_URL}/analyze-threat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ input })
+        });
+        const data = await res.json();
+        resBox.innerText = data.response || "Errore";
+      } catch (err) {
+        resBox.innerText = "Errore di connessione";
+      }
+    }
+
+    async function checkEmail() {
+      const email = document.getElementById("emailInput").value;
+      const resBox = document.getElementById("emailResponse");
+      resBox.innerText = "⏳ Analisi in corso...";
+      try {
+        const res = await fetch(`${BASE_URL}/check-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        resBox.innerText = data.response || "Errore";
+      } catch (err) {
+        resBox.innerText = "Errore di connessione";
+      }
+    }
+
+    async function checkPassword() {
+      const password = document.getElementById("passwordInput").value;
+      const resBox = document.getElementById("passwordResponse");
+      resBox.innerText = "⏳ Analisi in corso...";
+      try {
+        const res = await fetch(`${BASE_URL}/check-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+        resBox.innerText = data.response || "Errore";
+      } catch (err) {
+        resBox.innerText = "Errore di connessione";
+      }
+    }
+
+    async function chatBot() {
+      const message = document.getElementById("chatInput").value;
+      const resBox = document.getElementById("chatResponse");
+      resBox.innerText = "⌛ Attendi...";
+      try {
+        const res = await fetch(`${BASE_URL}/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        resBox.innerText = data.response || "Errore";
+      } catch (err) {
+        resBox.innerText = "Errore di connessione";
+      }
+    }
+  </script>
+</body>
+</html>
