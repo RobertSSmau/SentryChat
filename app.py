@@ -145,20 +145,18 @@ def analyze_threat():
 
 Analizza la seguente minaccia identificata da un antivirus o malware scanner:
 
-"{threat_name}"
+\"{threat_name}\"
 
-Restituisci solo le seguenti informazioni, senza introduzioni, saluti o commenti extra.
+Se il nome è inventato o non riconosciuto, dichiara che non hai informazioni affidabili.  
+Non inventare, non usare markdown, non scrivere introduzioni o asterischi.
 
-Descrizione: (massimo 2 frasi, tono semplice e chiaro)  
-Target: (es. Windows, macOS, multipiattaforma)  
-Pericolosità: (Alta / Media / Bassa / Falso positivo probabile)
-
-Rispondi esattamente in questo formato:
+Rispondi SOLO in questo formato:
 
 Descrizione: ...  
 Target: ...  
 Pericolosità: ...
 """
+
 
     try:
         response = client.chat.completions.create(
