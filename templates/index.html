@@ -21,22 +21,37 @@
         <h1>Cybersecurity Chatbot</h1>
 
         <nav id="mainNav">
+            <button class="nav-button" data-target="chatCard">Chat Cybersecurity</button>
             <button class="nav-button" data-target="threatCard">Analisi Minaccia</button>
             <button class="nav-button" data-target="emailCard">Verifica Email (Phishing)</button>
             <button class="nav-button" data-target="passwordCard">Analisi Password</button>
-            <button class="nav-button" data-target="chatCard">Chat Cybersecurity</button>
             <button class="nav-button" data-target="phoneCard">Verifica Telefono</button>
             <button class="nav-button" data-target="reputationCard">Email Reputation</button>
         </nav>
 
         <div class="container">
+            <div id="chatCard" class="card">
+                <div class="card-header">
+                    <h2>💬 Chat Cybersecurity</h2>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="chat-container" id="chatContainer"></div>
+                    <div class="chat-input-container">
+                        <textarea id="chatInput" rows="3"
+                            placeholder="Fai una domanda sulla sicurezza informatica..."></textarea>
+                        <button onclick="chatBot()">Invia</button>
+                    </div>
+                </div>
+            </div>
             <div id="threatCard" class="card">
                 <div class="card-header">
                     <h2>Analisi Minaccia</h2>
                     <span class="arrow">▲</span>
                 </div>
                 <div class="card-content">
-                  <p class="description">Hai ricevuto un avviso da un antivirus o un nome sospetto? Inserisci qui il nome della minaccia per avere un'analisi dettagliata.</p>
+                    <p class="description">Hai ricevuto un avviso da un antivirus o un nome sospetto? Inserisci qui il
+                        nome della minaccia per avere un'analisi dettagliata.</p>
                     <input id="threatInput" placeholder="Esempio: OSX.VSearch">
                     <button onclick="analyzeThreat()">Analizza</button>
                     <div id="threatResponse" class="response"></div>
@@ -48,7 +63,8 @@
                     <span class="arrow">▲</span>
                 </div>
                 <div class="card-content">
-                  <p class="description">Hai ricevuto una telefonata sospetta o da un numero sconosciuto? Inserisci il numero per sapere se è legittimo.</p>
+                    <p class="description">Hai ricevuto una telefonata sospetta o da un numero sconosciuto? Inserisci il
+                        numero per sapere se è legittimo.</p>
 
                     <input type="text" id="phoneInput" placeholder="Esempio: +393471234567">
                     <button onclick="checkPhone()">Verifica</button>
@@ -61,7 +77,8 @@
                     <span class="arrow">▲</span>
                 </div>
                 <div class="card-content">
-                  <p class="description">Hai ricevuto un'email da un indirizzo che non conosci? Inseriscilo per verificarne la reputazione online.</p>
+                    <p class="description">Hai ricevuto un'email da un indirizzo che non conosci? Inseriscilo per
+                        verificarne la reputazione online.</p>
                     <input type="text" id="reputationInput" placeholder="Esempio: test@email.com">
                     <button onclick="checkReputation()">Verifica</button>
                     <div id="reputationResponse" class="response"></div>
@@ -73,7 +90,8 @@
                     <span class="arrow">▲</span>
                 </div>
                 <div class="card-content">
-                  <p class="description">Hai ricevuto un'email sospetta? Incolla qui il testo per scoprire se si tratta di phishing.</p>
+                    <p class="description">Hai ricevuto un'email sospetta? Incolla qui il testo per scoprire se si
+                        tratta di phishing.</p>
 
                     <textarea id="emailInput" rows="4" placeholder="Incolla qui il contenuto sospetto..."></textarea>
                     <button onclick="checkEmail()">Verifica</button>
@@ -87,7 +105,8 @@
                     <span class="arrow">▲</span>
                 </div>
                 <div class="card-content">
-                  <p class="description">Vuoi sapere se la tua password è sicura? Inseriscila qui e ottieni un'analisi con suggerimenti.</p>
+                    <p class="description">Vuoi sapere se la tua password è sicura? Inseriscila qui e ottieni un'analisi
+                        con suggerimenti.</p>
 
                     <input type="text" id="passwordInput" placeholder="Scrivi la password da analizzare">
                     <button onclick="checkPassword()">Analizza</button>
@@ -101,7 +120,8 @@
                     <span class="arrow">▼</span>
                 </div>
                 <div class="card-content">
-                  <p class="description">Fai una domanda sulla sicurezza informatica: phishing, malware, password sicure, o altro. Il nostro esperto virtuale ti risponderà.</p>
+                    <p class="description">Fai una domanda sulla sicurezza informatica: phishing, malware, password
+                        sicure, o altro. Il nostro esperto virtuale ti risponderà.</p>
 
                     <div class="chat-container" id="chatContainer"></div>
                     <div class="chat-input-container">
