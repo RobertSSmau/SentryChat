@@ -43,11 +43,10 @@
 ## 🧱 Stack Tecnologico
 
 - **Backend**: Python, Flask
-- **Frontend**: HTML5, CSS3, JavaScript (stile Matrix UI)
+- **Frontend**: HTML5, CSS3, JavaScript
 - **AI/LLM**: Groq + Meta LLaMA 4 Scout (via OpenAI SDK)
 - **API esterne**:
-  - Abstract API (spam, email reputation, phone validation)
-  - IntelX (dark web search)
+  - Abstract API (email reputation, phone validation)
 
 ## 🚀 Come avviare il progetto
 
