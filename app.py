@@ -17,20 +17,13 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
-
-# Preprompt per contestualizzare il chatbot
-SYSTEM_PROMPT = """Sei un analizzatore esperto di sicurezza informatica. 
-Riceverai in input il contenuto di un messaggio e-mail. 
-Il tuo compito è:
-1. Determinare se il messaggio è sospetto o può essere un attacco di phishing (rispondi solo con "Phishing" o "Non phishing").
-2. Dare una breve spiegazione (massimo 2 frasi) del perché hai classificato il messaggio in quel modo.
-
-Formatta la risposta così:
-Classificazione: [Phishing / Non phishing]
-Motivo: ..."""
-
 @app.route("/chat", methods=["POST"])
 def chat():
+    # Preprompt per contestualizzare il chatbot
+    SYSTEM_PROMPT = """Sei un esperto di sicurezza informatica. 
+    Rispondi a domande generali sulla cybersecurity in modo chiaro e conciso. 
+    Puoi fornire spiegazioni su concetti come phishing, malware, password sicure e altre minacce informatiche. 
+    Mantieni le risposte informative e facili da capire."""
     data = request.get_json()
     user_message = data.get("message", "")
 
