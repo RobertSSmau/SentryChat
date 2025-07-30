@@ -1,161 +1,577 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cybersecurity Chatbot</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: #f1f1f1;
-      font-family: Arial, sans-serif;
-      padding: 2rem;
-    }
-    h1 {
-      text-align: center;
-    }
-    .container {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .card {
-      background-color: #1e1e1e;
-      padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #333;
-    }
-    input, textarea, button {
-      width: 100%;
-      padding: 0.8rem;
-      margin-top: 1rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    button {
-      background-color: #00b894;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #019875;
-    }
-    .response {
-      margin-top: 1rem;
-      background-color: #2d2d2d;
-      padding: 1rem;
-      border-radius: 6px;
-      white-space: pre-wrap;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cybersecurity Chatbot</title>
+    <style>
+        /* Stili Base */
+        body {
+            background-color: #121212; /* Nero profondo */
+            color: #f1f1f1; /* Grigio chiaro per il testo generale */
+            font-family: 'Arial', sans-serif; /* Un font leggibile */
+            padding: 0; /* Rimuoviamo padding dal body per il full-screen intro */
+            margin: 0;
+            display: flex; /* Usiamo flexbox per centrare il contenuto */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Altezza minima per occupare tutta la viewport */
+            overflow: hidden; /* Nascondiamo la scrollbar durante le transizioni */
+        }
+
+        .main-header-container {
+        display: flex; /* Abilita Flexbox */
+        align-items: center; /* Centra verticalmente gli elementi all'interno */
+        justify-content: center; /* Centra orizzontalmente l'intero blocco */
+        margin-bottom: 2rem; /* Spazio sotto l'intestazione principale */
+        padding: 0 1rem; /* Piccolo padding orizzontale per evitare che si attacchi ai bordi su schermi piccoli */
+        gap: 0.5rem;
+      }
+
+        .header-logo {
+            height: 2.7rem; /* Altezza fissa per il logo, proporzionata al titolo */
+            width: auto; /* Mantieni le proporzioni dell'immagine */
+            margin-right: 0; /* Spazio tra il logo e la scritta */
+            filter: drop-shadow(0 0 10px rgba(187, 134, 252, 0.7)); /* Lo stesso glow del titolo, per coerenza */
+            vertical-align: middle;
+          }
+
+        h1 {
+            text-align: center;
+            color: #bb86fc; /* Viola freddo per il titolo principale */
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(187, 134, 252, 0.7); /* Effetto glow cyberpunk */
+            margin-bottom: 0rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%; /* Assicura che occupi lo spazio disponibile */
+        }
+
+        /* --- Schermata di Introduzione --- */
+        #introScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #121212;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* CAMBIATO da flex-end a center per centrare il contenuto verticalmente */
+        align-items: center;
+        opacity: 1;
+        transition: opacity 1s ease-out, transform 1s ease-out;
+        z-index: 100;
+        padding-bottom: 10vh; /* Aumentato per sollevare l'intero blocco dal fondo. Puoi provare 15vh o 20vh se vuoi alzarlo di più. */
+        } 
+
+        #introScreen.hidden {
+            opacity: 0;
+            transform: translateY(-100%); /* Sposta verso l'alto per farla scomparire */
+            pointer-events: none; /* Disabilita interazioni una volta nascosto */
+        }
+
+        #mainLogo {
+            max-width: 70%; /* Il logo occupa gran parte della larghezza */
+            max-height: 60vh; /* E anche dell'altezza della viewport */
+            opacity: 0; /* Inizia invisibile */
+            animation: fadeInScale 1.5s ease-out forwards 0.5s; /* Animazione di entrata */
+            margin-bottom: 2rem;
+        }
+
+        #introText {
+        font-size: 1.5rem;
+        color: #e0b0ff;
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards 1.5s;
+        text-align: center;
+        max-width: 80%;
+        margin-bottom: 2rem; /* Questo crea spazio sotto il testo. Se 2rem è troppo, riducilo (es. 1rem). */
+        }
+        /* Animazioni Keyframe */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* --- Stili per il Bottone "Entra" --- */
+        #enterButton {
+        margin-top: 1rem; /* Regola questo in base a come vuoi che sia la distanza dal testo sopra */
+        padding: 0.4rem 1.2rem;
+        font-size: 0.9rem;
+        animation: pulse 1.5s infinite ease-in-out 2s;
+        width: fit-content;
+        max-width: 150px;
+        flex-grow: 0;
+        min-width: unset;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(187, 134, 252, 0.5); } /* Riduci il glow per un tasto più piccolo */
+            50% { transform: scale(1.03); box-shadow: 0 0 18px rgba(187, 134, 252, 0.9); } /* Riduci il glow per un tasto più piccolo */
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(187, 134, 252, 0.5); }
+        }
+
+        /* --- Contenuto Principale (inizialmente nascosto) --- */
+        #mainContent {
+            opacity: 0;
+            transform: translateY(20px); /* Inizia leggermente sotto */
+            transition: opacity 1s ease-out, transform 1s ease-out; /* Transizione per apparizione */
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box; /* Include padding e border nella larghezza */
+            padding: 2rem; /* Padding qui per il contenuto principale */
+        }
+
+        #mainContent.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #mainContent.hidden {
+            display: none; /* Nasconde completamente quando non visibile */
+        }
+
+
+        /* --- Menu di Navigazione Principale --- */
+        #mainNav {
+            display: flex;
+            flex-wrap: wrap; /* Permette ai bottoni di andare a capo */
+            justify-content: center;
+            gap: 1.5rem; /* Spazio tra i bottoni */
+            margin-bottom: 3rem; /* Spazio sotto il menu */
+            padding: 0 1rem;
+        }
+
+        .nav-button {
+            background-color: #bb86fc; /* Viola freddo */
+            color: #121212; /* Testo scuro sul bottone viola */
+            border: 2px solid #e0b0ff; /* Bordo viola chiaro */
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(187, 134, 252, 0.5); /* Glow sul bottone */
+            flex-grow: 1; /* Permette ai bottoni di espandersi */
+            max-width: 280px; /* Larghezza massima per evitare bottoni troppo larghi */
+        }
+
+        .nav-button:hover {
+            background-color: #e0b0ff; /* Viola più chiaro all'hover */
+            color: #121212;
+            box-shadow: 0 0 25px rgba(224, 176, 255, 0.8); /* Glow più intenso */
+            transform: translateY(-3px); /* Leggero spostamento verso l'alto */
+        }
+
+        /* --- Stili delle Card --- */
+        .card {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #333;
+            padding: 0;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
+            max-height: 0; /* Inizialmente nascosto */
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            margin-top: 0; /* Rimuove il margin-top dalla card */
+            border: 1px solid rgba(187, 134, 252, 0.2); /* Bordo sottile per le card */
+        }
+
+        .card.active { /* Questa classe attiverà la visibilità della card */
+            max-height: 1000px; /* Valore alto per permettere l'espansione. Regola se i contenuti sono molto lunghi. */
+            opacity: 1;
+            transform: translateY(0);
+            margin-top: 2rem; /* Spazio tra le card aperte e il menu */
+        }
+
+        /* Stili per l'Header cliccabile della Card */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 1.5rem; /* Padding uniforme */
+            border-bottom: 1px solid rgba(187, 134, 252, 0.4); /* Bordo leggermente meno intenso */
+            background-color: #2a2a2a; /* Colore di sfondo leggermente più chiaro per l'header */
+        }
+
+        .card-header h2 {
+            margin: 0;
+            color: #bb86fc;
+            font-size: 1.4rem;
+            text-shadow: 0 0 8px rgba(187, 134, 252, 0.4);
+        }
+
+        .card-header:hover h2, .card-header:hover .arrow {
+            color: #e0b0ff; /* Viola più chiaro all'hover */
+            text-shadow: 0 0 12px rgba(224, 176, 255, 0.6);
+        }
+
+        /* Stili per la Freccia nella Card Header */
+        .arrow {
+            transition: transform 0.3s ease;
+            color: #bb86fc;
+            font-size: 1.4rem;
+        }
+
+        .arrow.rotated {
+            transform: rotate(180deg);
+        }
+
+        /* Stili per il Contenuto Interno della Card (input, button, response) */
+        .card-content {
+            padding: 1.5rem; /* Padding interno al contenuto della card */
+        }
+
+        input, textarea {
+            background-color: #0d0d0d; /* Input più scuri */
+            color: #f1f1f1;
+            border: 1px solid #bb86fc; /* Bordo viola */
+            padding: 0.8rem;
+            margin-top: 1rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: calc(100% - 2px); /* Larghezza completa con bordo */
+            box-sizing: border-box; /* Include padding e border */
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #a0a0a0;
+        }
+
+        button {
+            background-color: #bb86fc;
+            color: #121212; /* Testo scuro sui bottoni principali delle card */
+            border: none;
+            padding: 0.9rem;
+            margin-top: 1.5rem; /* Più spazio sopra i bottoni */
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 10px rgba(187, 134, 252, 0.4);
+        }
+
+        button:hover {
+            background-color: #e0b0ff;
+            box-shadow: 0 0 20px rgba(224, 176, 255, 0.7);
+        }
+
+        .response {
+            margin-top: 1.5rem;
+            background-color: #2d2d2d;
+            padding: 1rem;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            border: 1px solid rgba(187, 134, 252, 0.3);
+            color: #e0b0ff; /* Viola chiaro per le risposte */
+        }
+
+        /* Media Queries per reattività */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            #introText {
+                font-size: 1.2rem;
+            }
+            .nav-button {
+                font-size: 1rem;
+                padding: 0.7rem 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #mainLogo {
+                max-width: 90%;
+            }
+            #introText {
+                font-size: 1rem;
+            }
+            .nav-button {
+                width: 100%; /* Bottoni su colonna singola */
+                max-width: none;
+            }
+            .card-header h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <h1>🛡️ Cybersecurity Chatbot</h1>
-  <div class="container">
 
-    <div class="card">
-      <h2>🔍 Analisi Minaccia</h2>
-      <input id="threatInput" placeholder="Esempio: OSX.VSearch">
-      <button onclick="analyzeThreat()">Analizza</button>
-      <div id="threatResponse" class="response"></div>
-    </div>
+    <div id="introScreen">
+        <img src="{{ url_for('static', filename='images/01-logo.png') }}" alt="Il Tuo Logo" id="mainLogo">
+        <p id="introText">Decifra, proteggi, anticipa. La tua fortezza digitale inizia qui.</p>
+        <button id="enterButton" class="nav-button">Entra</button> </div>
+      </div>
 
-    <div class="card">
-      <h2>📧 Verifica Email (Phishing)</h2>
-      <textarea id="emailInput" rows="4" placeholder="Incolla qui il contenuto sospetto..."></textarea>
-      <button onclick="checkEmail()">Verifica</button>
-      <div id="emailResponse" class="response"></div>
-    </div>
+    <div id="mainContent" class="hidden">
+        <h1>Cybersecurity Chatbot</h1>
 
-    <div class="card">
-      <h2>🔑 Analisi Password</h2>
-      <input type="text" id="passwordInput" placeholder="Scrivi la password da analizzare">
-      <button onclick="checkPassword()">Analizza</button>
-      <div id="passwordResponse" class="response"></div>
-    </div>
+        <nav id="mainNav">
+            <button class="nav-button" data-target="threatCard">Analisi Minaccia</button>
+            <button class="nav-button" data-target="emailCard">Verifica Email (Phishing)</button>
+            <button class="nav-button" data-target="passwordCard">Analisi Password</button>
+            <button class="nav-button" data-target="chatCard">Chat Cybersecurity</button>
+        </nav>
 
-    <div class="card">
-      <h2>💬 Chat Cybersecurity</h2>
-      <textarea id="chatInput" rows="3" placeholder="Fai una domanda sulla sicurezza informatica..."></textarea>
-      <button onclick="chatBot()">Invia</button>
-      <div id="chatResponse" class="response"></div>
-    </div>
+        <div class="container">
+            <div id="threatCard" class="card">
+                <div class="card-header">
+                    <h2>Analisi Minaccia</h2>
+                    <span class="arrow">▲</span>
+                </div>
+                <div class="card-content">
+                    <input id="threatInput" placeholder="Esempio: OSX.VSearch">
+                    <button onclick="analyzeThreat()">Analizza</button>
+                    <div id="threatResponse" class="response"></div>
+                </div>
+            </div>
 
-  </div>
+            <div id="emailCard" class="card">
+                <div class="card-header">
+                    <h2>Verifica Email (Phishing)</h2>
+                    <span class="arrow">▲</span>
+                </div>
+                <div class="card-content">
+                    <textarea id="emailInput" rows="4" placeholder="Incolla qui il contenuto sospetto..."></textarea>
+                    <button onclick="checkEmail()">Verifica</button>
+                    <div id="emailResponse" class="response"></div>
+                </div>
+            </div>
 
-  <script>
-    const BASE_URL = "http://localhost:5000";
+            <div id="passwordCard" class="card">
+                <div class="card-header">
+                    <h2>Analisi Password</h2>
+                    <span class="arrow">▲</span>
+                </div>
+                <div class="card-content">
+                    <input type="text" id="passwordInput" placeholder="Scrivi la password da analizzare">
+                    <button onclick="checkPassword()">Analizza</button>
+                    <div id="passwordResponse" class="response"></div>
+                </div>
+            </div>
 
-    async function analyzeThreat() {
-      const input = document.getElementById("threatInput").value;
-      const resBox = document.getElementById("threatResponse");
-      resBox.innerText = "⏳ Analisi in corso...";
-      try {
-        const res = await fetch(`${BASE_URL}/analyze-threat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ input })
+            <div id="chatCard" class="card">
+                <div class="card-header">
+                    <h2>Chat Cybersecurity</h2>
+                    <span class="arrow">▲</span>
+                </div>
+                <div class="card-content">
+                    <textarea id="chatInput" rows="3" placeholder="Fai una domanda sulla sicurezza informatica..."></textarea>
+                    <button onclick="chatBot()">Invia</button>
+                    <div id="chatResponse" class="response"></div>
+                </div>
+            </div>
+
+        </div> </div> <script>
+        const BASE_URL = "http://localhost:5000"; // URL base per le tue chiamate Flask
+
+        // Funzione per l'analisi delle minacce
+        async function analyzeThreat() {
+            const input = document.getElementById("threatInput").value;
+            const resBox = document.getElementById("threatResponse");
+            resBox.innerText = "⏳ Analisi in corso...";
+            try {
+                const res = await fetch(`${BASE_URL}/analyze-threat`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ input })
+                });
+                const data = await res.json();
+                resBox.innerText = data.response || "Errore: Nessuna risposta valida.";
+            } catch (err) {
+                resBox.innerText = "Errore di connessione o del server.";
+                console.error("Errore nell'analisi minaccia:", err);
+            }
+        }
+
+        // Funzione per la verifica email (phishing)
+        async function checkEmail() {
+            const email = document.getElementById("emailInput").value;
+            const resBox = document.getElementById("emailResponse");
+            resBox.innerText = "⏳ Analisi in corso...";
+            try {
+                const res = await fetch(`${BASE_URL}/check-email`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                resBox.innerText = data.response || "Errore: Nessuna risposta valida.";
+            } catch (err) {
+                resBox.innerText = "Errore di connessione o del server.";
+                console.error("Errore nella verifica email:", err);
+            }
+        }
+
+        // Funzione per l'analisi password
+        async function checkPassword() {
+            const password = document.getElementById("passwordInput").value;
+            const resBox = document.getElementById("passwordResponse");
+            resBox.innerText = "⏳ Analisi in corso...";
+            try {
+                const res = await fetch(`${BASE_URL}/check-password`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+                resBox.innerText = data.response || "Errore: Nessuna risposta valida.";
+            } catch (err) {
+                resBox.innerText = "Errore di connessione o del server.";
+                console.error("Errore nell'analisi password:", err);
+            }
+        }
+
+        // Funzione per la chat con il chatbot
+        async function chatBot() {
+            const message = document.getElementById("chatInput").value;
+            const resBox = document.getElementById("chatResponse");
+            resBox.innerText = "⌛ Attendi...";
+            try {
+                const res = await fetch(`${BASE_URL}/chat`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                });
+                const data = await res.json();
+                resBox.innerText = data.response || "Errore: Nessuna risposta valida.";
+            } catch (err) {
+                resBox.innerText = "Errore di connessione o del server.";
+                console.error("Errore nella chat bot:", err);
+            }
+        }
+
+        // --- Logica di Interfaccia Utente (UI) ---
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const introScreen = document.getElementById('introScreen');
+        const mainContent = document.getElementById('mainContent');
+        const enterButton = document.getElementById('enterButton'); // Il nuovo bottone "Entra"
+        const navButtons = document.querySelectorAll('.nav-button'); // Bottoni di navigazione principali
+        const allCards = document.querySelectorAll('.card'); // Tutte le card collassabili
+
+        /**
+         * Gestisce la transizione dalla schermata introduttiva al contenuto principale.
+         * Nasconde introScreen e mostra mainContent con animazioni fluide.
+         */
+        function showMainContent() {
+            // Aggiunge la classe 'hidden' a introScreen per attivare la sua animazione di scomparsa
+            introScreen.classList.add('hidden');
+            // Imposta un timer per far apparire mainContent dopo che introScreen è quasi scomparso
+            // Il ritardo (1000ms = 1s) deve corrispondere alla durata della transizione CSS di introScreen
+            setTimeout(() => {
+                mainContent.classList.remove('hidden'); // Rimuove 'display: none' per renderlo visibile al layout
+                mainContent.classList.add('visible');   // Aggiunge 'visible' per attivare l'animazione di comparsa
+                document.body.style.overflow = 'auto'; // Riabilita lo scroll della pagina
+            }, 1000); // 1 secondo di ritardo
+        }
+
+        /**
+         * Gestisce l'apertura e chiusura delle singole card.
+         * Chiude tutte le altre card e apre quella specificata.
+         * @param {string} targetCardId - L'ID della card da attivare/disattivare.
+         */
+        function toggleCard(targetCardId) {
+            allCards.forEach(card => {
+                const cardHeader = card.querySelector('.card-header');
+                const arrow = cardHeader.querySelector('.arrow');
+
+                if (card.id === targetCardId) {
+                    // Se è la card cliccata (o la card target da un bottone di navigazione)
+                    // Toggle della classe 'active' per aprirla/chiuderla
+                    const isActive = card.classList.toggle('active');
+                    // Ruota la freccia di conseguenza
+                    if (isActive) {
+                        arrow.classList.add('rotated');
+                    } else {
+                        arrow.classList.remove('rotated');
+                    }
+                } else {
+                    // Chiudi tutte le altre card e resetta la loro freccia
+                    card.classList.remove('active');
+                    arrow.classList.remove('rotated');
+                }
+            });
+        }
+
+        // --- Event Listeners ---
+
+        // 1. Event listener per il bottone "Entra" sulla schermata introduttiva
+        // Se il bottone esiste nell'HTML (è facoltativo, vedi spiegazione precedente)
+        if (enterButton) {
+            enterButton.addEventListener('click', showMainContent);
+        }
+
+        // 2. Event listeners per i bottoni di navigazione principali (Analisi Minaccia, Verifica Email, ecc.)
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Se l'intro è ancora visibile, la nascondiamo e mostriamo il contenuto principale
+                if (!introScreen.classList.contains('hidden')) {
+                    showMainContent();
+                    // Assicurati che il mainContent sia visibile prima di tentare di scrollare o aprire la card
+                    // Aggiungiamo un piccolo ritardo extra per assicurare che la transizione sia completa
+                    setTimeout(() => {
+                        const targetId = this.dataset.target; // Ottieni l'ID della card da aprire dal data-target del bottone
+                        toggleCard(targetId); // Apri la card cliccata
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            // Scorri alla card appena aperta, posizionandola al centro della viewport
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 1100); // Leggermente più lungo del setTimeout di showMainContent
+                } else {
+                    // Se l'intro è già nascosta, apri semplicemente la card e scorri
+                    const targetId = this.dataset.target;
+                    toggleCard(targetId);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
         });
-        const data = await res.json();
-        resBox.innerText = data.response || "Errore";
-      } catch (err) {
-        resBox.innerText = "Errore di connessione";
-      }
-    }
 
-    async function checkEmail() {
-      const email = document.getElementById("emailInput").value;
-      const resBox = document.getElementById("emailResponse");
-      resBox.innerText = "⏳ Analisi in corso...";
-      try {
-        const res = await fetch(`${BASE_URL}/check-email`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
+        // 3. Event listeners per gli header delle singole card (per aprirle/chiuderle cliccando sull'header)
+        allCards.forEach(card => {
+            const cardHeader = card.querySelector('.card-header');
+            cardHeader.addEventListener('click', function() {
+                const currentCardId = card.id; // Ottieni l'ID della card cliccata
+                toggleCard(currentCardId); // Apri/chiudi la card
+            });
         });
-        const data = await res.json();
-        resBox.innerText = data.response || "Errore";
-      } catch (err) {
-        resBox.innerText = "Errore di connessione";
-      }
-    }
 
-    async function checkPassword() {
-      const password = document.getElementById("passwordInput").value;
-      const resBox = document.getElementById("passwordResponse");
-      resBox.innerText = "⏳ Analisi in corso...";
-      try {
-        const res = await fetch(`${BASE_URL}/check-password`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password })
-        });
-        const data = await res.json();
-        resBox.innerText = data.response || "Errore";
-      } catch (err) {
-        resBox.innerText = "Errore di connessione";
-      }
-    }
-
-    async function chatBot() {
-      const message = document.getElementById("chatInput").value;
-      const resBox = document.getElementById("chatResponse");
-      resBox.innerText = "⌛ Attendi...";
-      try {
-        const res = await fetch(`${BASE_URL}/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
-        });
-        const data = await res.json();
-        resBox.innerText = data.response || "Errore";
-      } catch (err) {
-        resBox.innerText = "Errore di connessione";
-      }
-    }
-  </script>
+        // Opzionale: Transizione automatica della schermata introduttiva dopo un certo tempo
+        // Rimuovi o commenta la riga seguente se vuoi che l'utente debba sempre cliccare "Entra"
+        // setTimeout(showMainContent, 5000); // Esempio: 5000ms = 5 secondi
+    });
+    </script>
 </body>
 </html>
