@@ -20,11 +20,24 @@
 - **Analisi minacce**
   - Fornisce descrizione e pericolosità di un nome malware o minaccia segnalata.
 
-## 📸 Screenshot
+## 📸 Screenshots
 
-| Home / Chatbot | Analisi Email | Verifica Telefono |
-|----------------|---------------|--------------------|
-| ![screen1](screenshots/screen1.png) | ![screen2](screenshots/screen2.png) | ![screen3](screenshots/screen3.png) |
+<p align="center">
+  <img src="screenshots/screen1.png" alt="Screen 1"
+       style="width: 90%; max-width: 400; margin-bottom: 20px;" />
+</p>
+
+<p align="center">
+  <img src="screenshots/screen2.png" alt="Screen 2"
+       style="width: 90%; max-width: 400; margin-bottom: 20px;" />
+</p>
+
+<p align="center">
+  <img src="screenshots/screen3.png" alt="Screen 3"
+       style="width: 90%; max-width: 400;" />
+
+</p>
+
 
 
 ## 🧱 Stack Tecnologico
