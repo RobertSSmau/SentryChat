@@ -339,6 +339,8 @@
             <button class="nav-button" data-target="emailCard">Verifica Email (Phishing)</button>
             <button class="nav-button" data-target="passwordCard">Analisi Password</button>
             <button class="nav-button" data-target="chatCard">Chat Cybersecurity</button>
+            <button class="nav-button" data-target="phoneCard">Verifica Telefono</button>
+            <button class="nav-button" data-target="reputationCard">Email Reputation</button>
         </nav>
 
         <div class="container">
@@ -353,7 +355,28 @@
                     <div id="threatResponse" class="response"></div>
                 </div>
             </div>
-
+                      <div id="phoneCard" class="card">
+            <div class="card-header">
+              <h2>Verifica Numero di Telefono</h2>
+              <span class="arrow">▲</span>
+            </div>
+            <div class="card-content">
+              <input type="text" id="phoneInput" placeholder="Esempio: +393471234567">
+              <button onclick="checkPhone()">Verifica</button>
+              <div id="phoneResponse" class="response"></div>
+            </div>
+          </div>
+                    <div id="reputationCard" class="card">
+            <div class="card-header">
+              <h2>Email Reputation</h2>
+              <span class="arrow">▲</span>
+            </div>
+            <div class="card-content">
+              <input type="text" id="reputationInput" placeholder="Esempio: test@email.com">
+              <button onclick="checkReputation()">Verifica</button>
+              <div id="reputationResponse" class="response"></div>
+            </div>
+          </div>
             <div id="emailCard" class="card">
                 <div class="card-header">
                     <h2>Verifica Email (Phishing)</h2>
@@ -393,6 +416,40 @@
         </div> </div> <script>
         const BASE_URL = "http://localhost:5000"; // URL base per le tue chiamate Flask
 
+                async function checkPhone() {
+            const phone = document.getElementById("phoneInput").value;
+            const resBox = document.getElementById("phoneResponse");
+            resBox.innerText = "⏳ Verifica in corso...";
+            try {
+                const res = await fetch(`${BASE_URL}/check-phone-llm`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ phone })
+                });
+                const data = await res.json();
+                resBox.innerText = data.spiegazione || "Errore: Nessuna risposta valida.";
+            } catch (err) {
+                resBox.innerText = "Errore di connessione o del server.";
+                console.error("Errore verifica telefono:", err);
+            }
+        }
+                async function checkReputation() {
+            const email = document.getElementById("reputationInput").value;
+            const resBox = document.getElementById("reputationResponse");
+            resBox.innerText = "⏳ Verifica in corso...";
+            try {
+                const res = await fetch(`${BASE_URL}/email-reputation-llm`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                resBox.innerText = data.spiegazione || "Errore: Nessuna risposta valida.";
+            } catch (err) {
+                resBox.innerText = "Errore di connessione o del server.";
+                console.error("Errore email reputation:", err);
+            }
+        }
         // Funzione per l'analisi delle minacce
         async function analyzeThreat() {
             const input = document.getElementById("threatInput").value;
