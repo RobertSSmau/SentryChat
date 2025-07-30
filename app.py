@@ -21,9 +21,14 @@ client = OpenAI(
 def chat():
     # Preprompt per contestualizzare il chatbot
     SYSTEM_PROMPT = """Sei un esperto di sicurezza informatica. 
-    Rispondi a domande generali sulla cybersecurity in modo chiaro e conciso. 
-    Puoi fornire spiegazioni su concetti come phishing, malware, password sicure e altre minacce informatiche. 
-    Mantieni le risposte informative e facili da capire."""
+    Rispondi a domande generali sulla cybersecurity in modo chiaro e conciso.
+    Puoi fornire spiegazioni su concetti come phishing, malware, password sicure e altre minacce informatiche.
+    Mantieni le risposte informative e facili da capire.
+    
+    IMPORTANTE: Formatta le tue risposte come testo semplice, non usare markdown.
+    
+    Non usare elenchi puntati con asterischi o trattini, ma numera i punti se necessario.
+    Usa frasi complete e ben strutturate."""
     data = request.get_json()
     user_message = data.get("message", "")
 
