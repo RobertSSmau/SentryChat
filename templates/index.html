@@ -89,14 +89,16 @@
 
             <div id="chatCard" class="card">
                 <div class="card-header">
-                    <h2>Chat Cybersecurity</h2>
-                    <span class="arrow">▲</span>
+                    <h2>💬 Chat Cybersecurity</h2>
+                    <span class="arrow">▼</span>
                 </div>
                 <div class="card-content">
-                    <textarea id="chatInput" rows="3"
-                        placeholder="Fai una domanda sulla sicurezza informatica..."></textarea>
-                    <button onclick="chatBot()">Invia</button>
-                    <div id="chatResponse" class="response"></div>
+                    <div class="chat-container" id="chatContainer"></div>
+                    <div class="chat-input-container">
+                        <textarea id="chatInput" rows="3"
+                            placeholder="Fai una domanda sulla sicurezza informatica..."></textarea>
+                        <button onclick="chatBot()">Invia</button>
+                    </div>
                 </div>
             </div>
 
@@ -199,8 +201,17 @@
         // Funzione per la chat con il chatbot
         async function chatBot() {
             const message = document.getElementById("chatInput").value;
-            const resBox = document.getElementById("chatResponse");
-            resBox.innerText = "⌛ Attendi...";
+            const chatContainer = document.getElementById("chatContainer");
+            const inputField = document.getElementById("chatInput");
+
+            if (!message.trim()) return;
+
+            // Aggiungi il messaggio dell'utente
+            addMessage(message, true);
+
+            // Pulisci l'input
+            inputField.value = "";
+
             try {
                 const res = await fetch(`${BASE_URL}/chat`, {
                     method: "POST",
@@ -208,11 +219,32 @@
                     body: JSON.stringify({ message })
                 });
                 const data = await res.json();
-                resBox.innerText = data.response || "Errore: Nessuna risposta valida.";
+
+                // Aggiungi la risposta del bot
+                addMessage(data.response || "Errore", false);
+
+                // Scorri alla fine della chat
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             } catch (err) {
-                resBox.innerText = "Errore di connessione o del server.";
-                console.error("Errore nella chat bot:", err);
+                addMessage("Errore di connessione", false);
             }
+        }
+
+        function addMessage(content, isUser) {
+            const chatContainer = document.getElementById("chatContainer");
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `chat-message ${isUser ? 'user' : 'bot'}`;
+
+            const time = new Date().toLocaleTimeString();
+
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${content}
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+
+            chatContainer.appendChild(messageDiv);
         }
 
         // --- Logica di Interfaccia Utente (UI) ---
