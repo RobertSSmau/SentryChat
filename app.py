@@ -35,27 +35,78 @@ def check_spam():
 
     return jsonify(result)
 
-def check_email_spam(subject, body):
-    api_key = os.getenv("ABSTRACT_API_KEY")
-    url = "https://email-spam-detection.abstractapi.com/v1/"
+def check_phone_abstract(phone_number):
+    api_key = os.getenv("ABSTRACT_API_KEY_PHONE")
+    url = "https://phonevalidation.abstractapi.com/v1/"
     params = {
         "api_key": api_key,
-        "subject": subject,
-        "body": body
+        "phone": phone_number
     }
 
     try:
         response = requests.get(url, params=params)
-        print("DEBUG STATUS:", response.status_code)
-        print("DEBUG RESPONSE:", response.text)
-
         if response.status_code == 200:
             return response.json()
         else:
+            print("Errore Phone Validation:", response.status_code, response.text)
             return None
     except Exception as e:
-        print("Errore durante richiesta Spam Detection:", str(e))
+        print("Errore durante richiesta Phone Validation:", str(e))
         return None
+
+def formatta_phone_con_llm(phone_json):
+    SYSTEM_PROMPT = """
+Sei un assistente esperto di sicurezza digitale.
+
+Riceverai una risposta tecnica da un'API che analizza un numero di telefono.
+
+Fornisci una breve spiegazione per l’utente:  
+– Il numero è valido?  
+– A quale paese appartiene?  
+– È un numero mobile o fisso?  
+– L'operatore telefonico è noto?
+
+Scrivi in modo semplice, diretto, senza usare codice o elenchi puntati.
+"""
+
+    try:
+        prompt = f"Ecco i dati ricevuti dall'API:\n\n{json.dumps(phone_json, indent=2)}"
+
+        response = client.chat.completions.create(
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+        print("Errore LLM Phone:", e)
+        return "Errore durante la formattazione della risposta."
+
+@app.route("/check-phone-llm", methods=["POST"])
+def check_phone_llm():
+    data = request.get_json()
+    phone_number = data.get("phone", "")
+
+    if not phone_number:
+        return jsonify({"error": "Numero di telefono mancante"}), 400
+
+    # Chiamata all'API Abstract
+    validation = check_phone_abstract(phone_number)
+
+    if validation is None:
+        return jsonify({"error": "Errore durante la verifica"}), 500
+
+    # Spiegazione naturale con LLM
+    spiegazione = formatta_phone_con_llm(validation)
+
+    return jsonify({
+        "raw": validation,
+        "spiegazione": spiegazione
+    })
 
 def formatta_reputation_con_llm(email_reputation_json):
     SYSTEM_PROMPT = """
