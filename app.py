@@ -19,6 +19,44 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
+@app.route("/check-spam", methods=["POST"])
+def check_spam():
+    data = request.get_json()
+    subject = data.get("subject", "")
+    body = data.get("body", "")
+
+    if not subject and not body:
+        return jsonify({"error": "Subject o body mancanti"}), 400
+
+    result = check_email_spam(subject, body)
+
+    if result is None:
+        return jsonify({"error": "Errore durante la verifica spam"}), 500
+
+    return jsonify(result)
+
+def check_email_spam(subject, body):
+    api_key = os.getenv("ABSTRACT_API_KEY")
+    url = "https://email-spam-detection.abstractapi.com/v1/"
+    params = {
+        "api_key": api_key,
+        "subject": subject,
+        "body": body
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        print("DEBUG STATUS:", response.status_code)
+        print("DEBUG RESPONSE:", response.text)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+    except Exception as e:
+        print("Errore durante richiesta Spam Detection:", str(e))
+        return None
+
 def formatta_reputation_con_llm(email_reputation_json):
     SYSTEM_PROMPT = """
 Sei un assistente di sicurezza informatica.
