@@ -1,0 +1,404 @@
+/* Stili Base */
+body {
+    background-color: #121212;
+    /* Nero profondo */
+    color: #f1f1f1;
+    /* Grigio chiaro per il testo generale */
+    font-family: 'Arial', sans-serif;
+    /* Un font leggibile */
+    padding: 0;
+    /* Rimuoviamo padding dal body per il full-screen intro */
+    margin: 0;
+    display: flex;
+    /* Usiamo flexbox per centrare il contenuto */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Altezza minima per occupare tutta la viewport */
+    overflow: hidden;
+    /* Nascondiamo la scrollbar durante le transizioni */
+}
+
+.main-header-container {
+    display: flex;
+    /* Abilita Flexbox */
+    align-items: center;
+    /* Centra verticalmente gli elementi all'interno */
+    justify-content: center;
+    /* Centra orizzontalmente l'intero blocco */
+    margin-bottom: 2rem;
+    /* Spazio sotto l'intestazione principale */
+    padding: 0 1rem;
+    /* Piccolo padding orizzontale per evitare che si attacchi ai bordi su schermi piccoli */
+    gap: 0.5rem;
+}
+
+.header-logo {
+    height: 2.7rem;
+    /* Altezza fissa per il logo, proporzionata al titolo */
+    width: auto;
+    /* Mantieni le proporzioni dell'immagine */
+    margin-right: 0;
+    /* Spazio tra il logo e la scritta */
+    filter: drop-shadow(0 0 10px rgba(187, 134, 252, 0.7));
+    /* Lo stesso glow del titolo, per coerenza */
+    vertical-align: middle;
+}
+
+h1 {
+    text-align: center;
+    color: #bb86fc;
+    /* Viola freddo per il titolo principale */
+    font-size: 2.5rem;
+    text-shadow: 0 0 10px rgba(187, 134, 252, 0.7);
+    /* Effetto glow cyberpunk */
+    margin-bottom: 0rem;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    /* Assicura che occupi lo spazio disponibile */
+}
+
+/* --- Schermata di Introduzione --- */
+#introScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #121212;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* CAMBIATO da flex-end a center per centrare il contenuto verticalmente */
+    align-items: center;
+    opacity: 1;
+    transition: opacity 1s ease-out, transform 1s ease-out;
+    z-index: 100;
+    padding-bottom: 10vh;
+    /* Aumentato per sollevare l'intero blocco dal fondo. Puoi provare 15vh o 20vh se vuoi alzarlo di più. */
+}
+
+#introScreen.hidden {
+    opacity: 0;
+    transform: translateY(-100%);
+    /* Sposta verso l'alto per farla scomparire */
+    pointer-events: none;
+    /* Disabilita interazioni una volta nascosto */
+}
+
+#mainLogo {
+    max-width: 70%;
+    /* Il logo occupa gran parte della larghezza */
+    max-height: 60vh;
+    /* E anche dell'altezza della viewport */
+    opacity: 0;
+    /* Inizia invisibile */
+    animation: fadeInScale 1.5s ease-out forwards 0.5s;
+    /* Animazione di entrata */
+    margin-bottom: 2rem;
+}
+
+#introText {
+    font-size: 1.5rem;
+    color: #e0b0ff;
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards 1.5s;
+    text-align: center;
+    max-width: 80%;
+    margin-bottom: 2rem;
+    /* Questo crea spazio sotto il testo. Se 2rem è troppo, riducilo (es. 1rem). */
+}
+
+/* Animazioni Keyframe */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* --- Stili per il Bottone "Entra" --- */
+#enterButton {
+    margin-top: 1rem;
+    /* Regola questo in base a come vuoi che sia la distanza dal testo sopra */
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+    animation: pulse 1.5s infinite ease-in-out 2s;
+    width: fit-content;
+    max-width: 150px;
+    flex-grow: 0;
+    min-width: unset;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
+    }
+
+    /* Riduci il glow per un tasto più piccolo */
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 18px rgba(187, 134, 252, 0.9);
+    }
+
+    /* Riduci il glow per un tasto più piccolo */
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
+    }
+}
+
+/* --- Contenuto Principale (inizialmente nascosto) --- */
+#mainContent {
+    opacity: 0;
+    transform: translateY(20px);
+    /* Inizia leggermente sotto */
+    transition: opacity 1s ease-out, transform 1s ease-out;
+    /* Transizione per apparizione */
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+    /* Include padding e border nella larghezza */
+    padding: 2rem;
+    /* Padding qui per il contenuto principale */
+}
+
+#mainContent.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#mainContent.hidden {
+    display: none;
+    /* Nasconde completamente quando non visibile */
+}
+
+
+/* --- Menu di Navigazione Principale --- */
+#mainNav {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permette ai bottoni di andare a capo */
+    justify-content: center;
+    gap: 1.5rem;
+    /* Spazio tra i bottoni */
+    margin-bottom: 3rem;
+    /* Spazio sotto il menu */
+    padding: 0 1rem;
+}
+
+.nav-button {
+    background-color: #bb86fc;
+    /* Viola freddo */
+    color: #121212;
+    /* Testo scuro sul bottone viola */
+    border: 2px solid #e0b0ff;
+    /* Bordo viola chiaro */
+    padding: 0.9rem 1.8rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(187, 134, 252, 0.5);
+    /* Glow sul bottone */
+    flex-grow: 1;
+    /* Permette ai bottoni di espandersi */
+    max-width: 280px;
+    /* Larghezza massima per evitare bottoni troppo larghi */
+}
+
+.nav-button:hover {
+    background-color: #e0b0ff;
+    /* Viola più chiaro all'hover */
+    color: #121212;
+    box-shadow: 0 0 25px rgba(224, 176, 255, 0.8);
+    /* Glow più intenso */
+    transform: translateY(-3px);
+    /* Leggero spostamento verso l'alto */
+}
+
+/* --- Stili delle Card --- */
+.card {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #333;
+    padding: 0;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
+    max-height: 0;
+    /* Inizialmente nascosto */
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    margin-top: 0;
+    /* Rimuove il margin-top dalla card */
+    border: 1px solid rgba(187, 134, 252, 0.2);
+    /* Bordo sottile per le card */
+}
+
+.card.active {
+    /* Questa classe attiverà la visibilità della card */
+    max-height: 1000px;
+    /* Valore alto per permettere l'espansione. Regola se i contenuti sono molto lunghi. */
+    opacity: 1;
+    transform: translateY(0);
+    margin-top: 2rem;
+    /* Spazio tra le card aperte e il menu */
+}
+
+/* Stili per l'Header cliccabile della Card */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 1.5rem;
+    /* Padding uniforme */
+    border-bottom: 1px solid rgba(187, 134, 252, 0.4);
+    /* Bordo leggermente meno intenso */
+    background-color: #2a2a2a;
+    /* Colore di sfondo leggermente più chiaro per l'header */
+}
+
+.card-header h2 {
+    margin: 0;
+    color: #bb86fc;
+    font-size: 1.4rem;
+    text-shadow: 0 0 8px rgba(187, 134, 252, 0.4);
+}
+
+.card-header:hover h2,
+.card-header:hover .arrow {
+    color: #e0b0ff;
+    /* Viola più chiaro all'hover */
+    text-shadow: 0 0 12px rgba(224, 176, 255, 0.6);
+}
+
+/* Stili per la Freccia nella Card Header */
+.arrow {
+    transition: transform 0.3s ease;
+    color: #bb86fc;
+    font-size: 1.4rem;
+}
+
+.arrow.rotated {
+    transform: rotate(180deg);
+}
+
+/* Stili per il Contenuto Interno della Card (input, button, response) */
+.card-content {
+    padding: 1.5rem;
+    /* Padding interno al contenuto della card */
+}
+
+input,
+textarea {
+    background-color: #0d0d0d;
+    /* Input più scuri */
+    color: #f1f1f1;
+    border: 1px solid #bb86fc;
+    /* Bordo viola */
+    padding: 0.8rem;
+    margin-top: 1rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: calc(100% - 2px);
+    /* Larghezza completa con bordo */
+    box-sizing: border-box;
+    /* Include padding e border */
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #a0a0a0;
+}
+
+button {
+    background-color: #bb86fc;
+    color: #121212;
+    /* Testo scuro sui bottoni principali delle card */
+    border: none;
+    padding: 0.9rem;
+    margin-top: 1.5rem;
+    /* Più spazio sopra i bottoni */
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 10px rgba(187, 134, 252, 0.4);
+}
+
+button:hover {
+    background-color: #e0b0ff;
+    box-shadow: 0 0 20px rgba(224, 176, 255, 0.7);
+}
+
+.response {
+    margin-top: 1.5rem;
+    background-color: #2d2d2d;
+    padding: 1rem;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    border: 1px solid rgba(187, 134, 252, 0.3);
+    color: #e0b0ff;
+    /* Viola chiaro per le risposte */
+}
+
+/* Media Queries per reattività */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    #introText {
+        font-size: 1.2rem;
+    }
+
+    .nav-button {
+        font-size: 1rem;
+        padding: 0.7rem 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #mainLogo {
+        max-width: 90%;
+    }
+
+    #introText {
+        font-size: 1rem;
+    }
+
+    .nav-button {
+        width: 100%;
+        /* Bottoni su colonna singola */
+        max-width: none;
+    }
+
+    .card-header h2 {
+        font-size: 1.2rem;
+    }
+}
