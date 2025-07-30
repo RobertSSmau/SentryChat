@@ -21,15 +21,29 @@
         <h1>Cybersecurity Chatbot</h1>
 
         <nav id="mainNav">
+            <button class="nav-button" data-target="chatCard">Chat Cybersecurity</button>
             <button class="nav-button" data-target="threatCard">Analisi Minaccia</button>
             <button class="nav-button" data-target="emailCard">Verifica Email (Phishing)</button>
             <button class="nav-button" data-target="passwordCard">Analisi Password</button>
-            <button class="nav-button" data-target="chatCard">Chat Cybersecurity</button>
             <button class="nav-button" data-target="phoneCard">Verifica Telefono</button>
             <button class="nav-button" data-target="reputationCard">Email Reputation</button>
         </nav>
 
         <div class="container">
+            <div id="chatCard" class="card">
+                <div class="card-header">
+                    <h2>💬 Chat Cybersecurity</h2>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="chat-container" id="chatContainer"></div>
+                    <div class="chat-input-container">
+                        <textarea id="chatInput" rows="3"
+                            placeholder="Fai una domanda sulla sicurezza informatica..."></textarea>
+                        <button onclick="chatBot()">Invia</button>
+                    </div>
+                </div>
+            </div>
             <div id="threatCard" class="card">
                 <div class="card-header">
                     <h2>Analisi Minaccia</h2>
@@ -84,21 +98,6 @@
                     <input type="text" id="passwordInput" placeholder="Scrivi la password da analizzare">
                     <button onclick="checkPassword()">Analizza</button>
                     <div id="passwordResponse" class="response"></div>
-                </div>
-            </div>
-
-            <div id="chatCard" class="card">
-                <div class="card-header">
-                    <h2>💬 Chat Cybersecurity</h2>
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="card-content">
-                    <div class="chat-container" id="chatContainer"></div>
-                    <div class="chat-input-container">
-                        <textarea id="chatInput" rows="3"
-                            placeholder="Fai una domanda sulla sicurezza informatica..."></textarea>
-                        <button onclick="chatBot()">Invia</button>
-                    </div>
                 </div>
             </div>
 
